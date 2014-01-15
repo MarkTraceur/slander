@@ -6,6 +6,10 @@ from job import JobQueue
 class Brain(object):
     def __init__(self, config, sink=None):
         self.config = config
+        if 'irc' in self.config and 'password' in self.config['irc']:
+            self.config['irc']['password'] = '*****';
+        if 'svn' in self.config and 'password' in self.config['svn']:
+            self.config['svn']['password'] = '*****';
         self.sink = sink
         self.project_url = "https://github.com/adamwight/slander"
         if "project_url" in self.config:
@@ -28,7 +32,7 @@ class Brain(object):
             dump = self.config
             dump['jobs'] = JobQueue.describe()
             dump = re.sub(r'p(ass)?w(ord)?[ :=]*[^ ]+', r'p***word', json.dumps(dump))
-            self.say("Configuration: [%s]" % (dump, ), force=True)
+            self.say("Configuration: [%s]" % (json.dumps(dump), ), force=True)
         #elif re.search(r'\bkill\b', message):
         #    self.say("Squeal! Killed by %s" % (user, ))
         #    JobQueue.killall()
